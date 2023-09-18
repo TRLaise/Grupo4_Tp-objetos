@@ -1,1 +1,159 @@
+object pou {
+	var property reir = true
+	var property hambre = false
+	var property cansando = false
+	var property edad = 7
+	var property alimento = {"frutas" : 0, "verduras" : 0, "bebidas" : 0, "frituras" : 0, "carnes" : 0}.
+	var property salud = "normal"
+	const energiaIcial = edad * 10
+	var energiaActual = energiaIcial
+	var property totalSaludable = alimentacion["frutas"] + alimentacion["verduras"] + alimentacion["bebidas"]
+    var property totalInsano = alimentacion["frituras"]
 
+	
+	method energiaActual(valor){
+		if (valor < self.energiaIncial())
+		hambre = true
+		cansado = true
+		reir = false   
+	}
+	
+ method estadoSalud() {
+ 
+    if (totalInsano > totalSaludable) {
+      salud = "deplorable"
+    } else if (totalInsano == totalSaludable && reir = false) {
+      salud = "alarmante"
+    } else if ( estaSaludable && reir = true) {
+      salud = "normal"
+    } else if ( estaSaludable && reir = false) {
+      salud = "aburrido"
+    }
+  }
+  
+  	method estaSaludable(){				//Devuelve un Booleano verificando que cumple con el 1%
+		if (((totalSaludable + totalInsano)*0,01) > totalInsano)
+	}
+	
+	method comer(alimento) {
+	if(hambre = true)
+		reir = false
+ 	switch (alimento) {
+      case "frutas" :
+        frutas.comer()
+      case "verduras" :
+        verduras.comer()
+      case "bebidas" :
+        bebidas.comer()
+      case "frituras" :
+        frituras.comer()
+      case "carnes" :
+        carnes.comer()
+    }
+    hambre = false
+    reir = true
+	}
+	
+	method jugar() {
+		reir = true
+	}
+	
+	method bañarse(){
+		if(reir = true)
+		energiaActual = energiaActual - 2
+		reir = false
+	}
+	
+	method energizarce(){
+		if(reir = true && energiaActual <= energiaInicial)
+		energiaActual = energiaInicial
+	}
+	
+	method dormir(){
+		if(cansando = false)
+		
+		}
+		energiaActual = energiaInicial
+	}
+	
+object tiendaDeAlimentos {} 
+
+● Dormir:
+Pou también necesita descansar en su dormitorio e incluso posee una
+lámpara para apagar la luz. En caso de que no desee dormir, se compra una
+sustancia para mejorar su energía.
+No dormir le cambia su risa y cada acción que realice entre dormida y
+dormida baja en 1 su nivel de energía, salvo bañarse que baja en 2 su nivel de
+energía.
+
+object frutas {
+  method comer() {
+    pou.energia = Pou.energia + 1
+    pou.alimentacion["frutas"] = pou.alimentacion["frutas"] + 1
+  }
+}
+
+object verduras {
+  method comer() {
+    pou.energia = pou.energia + 1
+    pou.alimentacion["verduras"] = pou.alimentacion["verduras"] + 1
+  }
+}
+
+object bebidas {
+  method comer() {
+    pou.energia = pou.energia + 0.5
+    pou.alimentacion["bebidas"] = pou.alimentacion["bebidas"] + 1
+  }
+}
+
+object frituras {
+  method comer() {
+    pou.energia = pou.energia - 0.2
+    pou.alimentacion["frituras"] = pou.alimentacion["frituras"] + 1
+  }
+}
+
+object carnes {
+  method comer() {
+    pou.energia = pou.energia 
+    pou.alimentacion["carnes"] = pou.alimentacion["carnes"] + 1
+  }
+}
+
+/* Pensamos en juntarlos a todos como actividades dentro de una coleccion
+object baniarse {}
+object dormir {}
+object jugar {}
+object energizarce {}
+ */	
+ 
+ /* No se nos ocurrio como relacionar con un metodo para poder modificar el estado actual del Pou
+object deplorable {
+  method estadoSalud() {
+    if (pou.totalInsano > pou.totalSaludable)
+    pou.salud = "deplorable"
+  }
+}
+
+object alarmante {
+  method estadoSalud() {
+    if (pou.totalInsano = pou.totalSaludable && reir = false)
+    salud = "alarmante"
+  }
+}
+
+object normal {
+  method estadoSalud() {
+    if (pou.estaSaludable() && reir = true)
+    salud = "normal"
+  }
+}
+
+object aburrido {
+  method estadoSalud() {
+    if (pou.estaSaludable() && reir = false)
+    salud ="aburrido"
+  }
+}
+ */
