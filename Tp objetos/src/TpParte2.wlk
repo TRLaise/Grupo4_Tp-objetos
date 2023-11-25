@@ -18,13 +18,12 @@ class Mascota{
 	var property position = game.at(2,3)
 
 //es necesario inicializar "edad" antes de llamar a este metodo
-	method IniciarJuego()
-	{
+	method iniciarJuego(){
 		game.width(5)
 		game.height(7)
 		game.cellSize(100)
 		game.title("Jueguito Pou")
-		game.onTick(500, "actualizar", { self.ActualizarEstadoPou() })
+		game.onTick(500, "actualizar", { self.actualizarEstadoPou() })
 		game.start()
 		game.addVisual(self)
 		game.addVisual(pelota)
@@ -34,7 +33,7 @@ class Mascota{
 		game.addVisual(comestibles)
 		game.addVisual(estadisticas)
 		keyboard.num1().onPressDo { self.baniarse()}
-		keyboard.num2().onPressDo { self.jugar(pelota)}
+		keyboard.num2().onPressDo { self.jugar()}
 		keyboard.num3().onPressDo { self.dormir()}
 		keyboard.num4().onPressDo { self.energizarse()}
 		keyboard.q().onPressDo { self.comer(fruta)}
@@ -44,22 +43,21 @@ class Mascota{
 		keyboard.t().onPressDo { self.comer(carne)}	
 	}
 	
-	method ActualizarEstadoPou()
-	{
-		estadisticas.SetearEstadisticas(self)
+	method actualizarEstadoPou(){
+		estadisticas.setearEstadisticas(self)
 	
 		//esta limpio y no se rie
-		if(!self.EstaSucio() && !reir)
+		if(!self.estaSucio() && !reir)
 		{
 			image = "pou limpio sin sonrreir.png"
 		}
 		//esta limpio y se rie
-		else if(!self.EstaSucio() && reir)
+		else if(!self.estaSucio() && reir)
 		{
 			image = "pou limpio sonrriendo.png"
 		}
 		//esta sucio y no se rie
-		else if(self.EstaSucio() && !reir)
+		else if(self.estaSucio() && !reir)
 		{
 			image = "pou sucio sin sonrreir.png"
 		}
@@ -70,10 +68,9 @@ class Mascota{
 		}
 	}
 
-method EstaSucio()
-    {
-    	return comio && jugo
-    }
+ method estaSucio(){
+   		return comio && jugo
+ }
 
  method asignarEdad(edadAsignada){
 		edad = edadAsignada;
@@ -81,9 +78,18 @@ method EstaSucio()
 		energiaInicial = energiaActual
  }
 
+ method controlEnergia(){
+ 	
+ 	if(self.energiaActual() < self.energiaInicial()){
+ 		self.energizarse()
+ 		game.say(self, "Nivel de energia menor al inicial")
+ 	}
+ 	
+ }
+ 
  method comer(alimento) {
 	
-	energiaActual += alimento.energiaAportada()
+	energiaActual += alimento.energiaQueAporta()
 	if(alimento.esSaludable()) totalSaludables++
     else totalInsalubres++;
     
@@ -93,40 +99,47 @@ method EstaSucio()
 	
     hambre = false
     comio = true
- }
- 
- method modificarValoresJugar(){
- 	energiaActual -= 3
-	reir = true
-	jugo = true
- 	cantAcciones++
- }
- 
- method jugar(mascota2) {
- 	
- 	if(!self.reir() && !mascota2.reir()){
- 			
-	  energiaActual -= 3
-	  reir = true
-	  jugo = true
- 	  cantAcciones++
- 	  
- 	  mascota2.jugar()
-	self.modificarValoresJugar()
-	mascota2.modificarValoresJugar()
     
-    }
-
-//REVISAR Y TERMINAR
+	self.controlEnergia()
+ }
+ 
+method jugar() {
+     energiaActual -= 3
+     reir = true
+     jugo = true
+     
+     self.controlEnergia()
 }
+
+method jugarConOtro(otraMascota) {
 	
- method baniarse(){
+	if (self.estaAburrido() && otraMascota.estaAburrido()){
+ 		self.jugar()
+    	otraMascota.jugar()
+    }else if (self.estaAburrido() != otraMascota.estaAburrido() && self.menosEnergiaQue(otraMascota)){
+        throw new Exception(message = "El pou feliz tiene menos energia que el pou aburrido")
+    }	  
+    
+    self.controlEnergia()
+}
+   
+ method estaAburrido(){
+	return (self.estadoSalud() == "ABURRIDO")
+}
+
+ method menosEnergiaQue(otraMascota){
+	return self.energiaActual() <= otraMascota.energiaActual()
+}
+
+ method baniarse() {
 	if(comio && jugo)
 	  comio = false
 	  jugo = false
 	  reir = false
 	  energiaActual -= 2
- }
+	  
+	  self.controlEnergia()
+}
  
  method energizarse(){
 	if(reir && energiaActual <= energiaInicial)
@@ -138,7 +151,7 @@ method EstaSucio()
     reir = true
  }
  
-method estaSaludable() = ((totalSaludables + totalInsalubres)*(0.01)) > totalInsalubres //Devuelve un Booleano verificando que cumple con el 1%
+ method estaSaludable() = ((totalSaludables + totalInsalubres)*(0.01)) > totalInsalubres //Devuelve un Booleano verificando que cumple con el 1%
 
  method estadoSalud() {
  
@@ -158,12 +171,11 @@ method estaSaludable() = ((totalSaludables + totalInsalubres)*(0.01)) > totalIns
 
 }
 
-class PouAdulto inherits Mascota{
-	
+object pouAdulto inherits Mascota{
 	
 override method comer(alimento) {
 	
-	energiaActual += alimento.energiaAportada()
+	energiaActual += alimento.energiaQueAporta()
 	if(alimento.esSaludable()) totalSaludables++
     else totalInsalubres++;
     
@@ -179,22 +191,23 @@ override method comer(alimento) {
 			edad += 1
 			cantAcciones = 0
 	}
+	
+	self.controlEnergia()
  }
  
-override method jugar(mascota2) {
+override method jugar() {
 	
- if(!self.reir() && !mascota2.reir()){
+ 	energiaActual -= 3
+	reir = true
+	jugo = true
+	cantAcciones++	
 	
- 	self.modificarValoresJugar()
-	mascota2.modificarValoresJugar()
-    
-    if(cantAcciones == 5){
+	 if(cantAcciones == 5){
 			edad += 1
 			cantAcciones = 0
 	}
- }
 
-// REVISAR Y TERMINAR
+	self.controlEnergia()
 }
 	
 override method baniarse(){
@@ -209,6 +222,8 @@ override method baniarse(){
 			edad += 1
 			cantAcciones = 0
 	}
+	
+	self.controlEnergia()
  }
  
 override method energizarse(){
@@ -233,34 +248,83 @@ override method dormir(){
 			cantAcciones = 0
 	}
  }
+ 
+}
+
+class Alimento{
+	
+	var property elementoCocina = null
+	
+	
+	method energiaQueAporta(){
 		
+		if(!elementoCocina.frie()){
+			return 0.2
+		  }else{
+			return -0.2
+		}
+	}
+	
+	method esSaludable(){
+		return !elementoCocina.frie()
+	}
+	
 }
 
-
-object fruta { 
-  const property esSaludable = true
-  const property energiaAportada = 1
+object sarten {
+	const property frie = false
 }
 
-object verdura {
-  const property esSaludable = true
-  const property energiaAportada = 1
+object freidora {
+	const property frie = true
 }
 
-object bebida {
-  const property esSaludable = true
-  const property energiaAportada = 0.5
+object plancha {
+	const property frie = false
 }
 
-object fritura {
-  const property esSaludable = false
-  const property energiaAportada = 0.2
+object olla {
+	const property frie = false
 }
 
-object carne {
-  const property esSaludable = true
-  const property energiaAportada = 0
+object fruta inherits Alimento{
+	
+	override method energiaQueAporta(){
+		return 1
+	}
+	
+	override method esSaludable(){
+		return true
+	}
+	
 }
+
+object verdura inherits Alimento{
+	
+	override method energiaQueAporta(){
+		return 1
+	}
+	
+	override method esSaludable(){
+		return true
+	}
+
+}
+
+object bebida inherits Alimento{
+	
+	override method energiaQueAporta(){
+		return 0.5
+	}
+	
+	override method esSaludable(){
+		return true
+	}
+} 
+
+object carne inherits Alimento{}
+
+object fritura inherits Alimento{}
 
 object pelota
 {
@@ -288,7 +352,7 @@ object lampara
 
 object comestibles
 {
-	var property position = game.at(4,0) 
+	var property position = game.at(4,1) 
 	var property image = "comestibles.png"
 }
 
@@ -296,8 +360,9 @@ object estadisticas
 {
 	var property text = ""
 	var property position = game.at(1,6)
-	method SetearEstadisticas(pou)
+	method setearEstadisticas(pou)
 	{	
 		text = "Energia Actual: " + pou.energiaActual() + "\nEstado de Salud: " + pou.estadoSalud()
 	}
+
 }
