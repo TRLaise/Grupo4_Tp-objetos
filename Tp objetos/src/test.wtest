@@ -1,0 +1,130 @@
+import TpParte2.*
+
+describe "Pruebas para mascota y pouAdulto" {
+    
+    test "1. hacer una comida y verificar si es con fritura" {
+    	
+    	const mochi = new Mascota()        
+        mochi.asignarEdad(10)
+        
+        mochi.comer(fritura)
+        assert.equals(1, mochi.totalInsalubres())
+        assert.equals(0, mochi.totalSaludables())
+    }
+    
+    test "2. hacer una comida y mostrar que no es con fritura" {
+        const flixnat = new Mascota()        
+        flixnat.asignarEdad(10)
+ 
+        flixnat.comer(fruta)
+        assert.equals(0, flixnat.totalInsalubres())
+        assert.equals(1, flixnat.totalSaludables())
+    }
+    
+    test "3. Mochi es vegetariano y se alimenta con alimentos saludables. mostrar si queda aburrido." {
+        const mochi = new Mascota()        
+        mochi.asignarEdad(10)
+        
+        mochi.comer(fruta)
+        mochi.comer(verdura)
+        assert.that(mochi.estaAburrido())
+    }
+    
+    test "4. Flixnat es glotón pero todos sus alimentos son sin frituras. mostrar si después de comer está aburrido." {
+        const flixnat = new Mascota()        
+        flixnat.asignarEdad(10)
+        
+        flixnat.comer(fruta)
+        flixnat.comer(verdura)
+        flixnat.comer(bebida)
+        flixnat.comer(carne)
+        assert.that(flixnat.estaAburrido())
+    }
+    
+   test "5. Poucotton es infantil y come papas fritas con patitas de pollos fritas y coca cola. mostrar que al final está feliz." {
+        
+        const papasFritas = new Alimento()
+        const patitasDePollo = new Alimento()
+        papasFritas.elementoCocina(freidora)
+        patitasDePollo.elementoCocina(freidora)
+        
+    	const poucotton = new Mascota()
+        poucotton.asignarEdad(2)
+        
+        poucotton.comer(papasFritas)
+        poucotton.comer(patitasDePollo)
+        poucotton.comer(bebida)
+        poucotton.jugar()
+        assert.that(poucotton.reir())
+        assert.that(poucotton.jugo())
+    }
+    
+    test "6. Hacer jugar a mochi con poucotton. ¿qué pasa?" {
+        const mochi = new Mascota()
+    	const poucotton = new Mascota()
+        mochi.asignarEdad(10)
+        poucotton.asignarEdad(2)
+        
+        mochi.jugarConOtro(poucotton)
+        assert.that(mochi.reir())
+        assert.that(mochi.jugo())
+        assert.that(poucotton.reir())
+        assert.that(poucotton.jugo())
+    }
+    
+    test "7. Hacer jugar a mochi con flixnat. ¿terminan ambos felices?" {
+        const mochi = new Mascota()
+        const flixnat = new Mascota()
+        mochi.asignarEdad(10)
+        flixnat.asignarEdad(25)
+        
+        mochi.jugarConOtro(flixnat)
+        assert.that(mochi.reir())
+        assert.that(mochi.jugo())
+        assert.that(flixnat.reir())
+        assert.that(flixnat.jugo())
+    }
+    
+    test "8. Hacer comer a ockelend distintas comidas y mostrar si aumentó su edad." {
+    	const ockelend = pouAdulto 
+        ockelend.asignarEdad(60)
+        ockelend.energiaActual(10)
+        
+        ockelend.comer(fruta)
+        ockelend.comer(bebida)
+        assert.equals(60, ockelend.edad())
+        
+        ockelend.comer(carne)
+        ockelend.comer(fritura)
+        assert.equals(61, ockelend.edad())
+    }
+    
+    test "9. Ockelend es el abuelo de poucotton... (continuación)" {
+        const ockelend = pouAdulto 
+        const poucotton = new Mascota()
+        poucotton.asignarEdad(2)
+        ockelend.asignarEdad(60)
+        ockelend.energiaActual(10)
+        
+        poucotton.jugarConOtro(ockelend)
+        poucotton.comer(verdura)
+        poucotton.baniarse()
+        poucotton.dormir()
+        poucotton.comer(bebida)
+        poucotton.jugarConOtro(ockelend)
+        
+        assert.equals(61, ockelend.edad()) // Aumenta después de todas las acciones
+    }
+    
+    test "10. poucotton después de comer y jugar se debe bañar. ¿ahora está feliz?" {
+        const poucotton = new Mascota()
+        poucotton.asignarEdad(2)
+        
+        poucotton.comer(bebida)
+        poucotton.jugar()
+        poucotton.baniarse()
+        
+        assert.that(poucotton.reir())
+        assert.that(poucotton.jugo())
+    }
+}

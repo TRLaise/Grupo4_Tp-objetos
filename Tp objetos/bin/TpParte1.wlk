@@ -8,8 +8,8 @@ object pou {
 	var property comio = false
 	var property jugo = false
 	var property edad 
-	var property energiaInicial
-	var property energiaActual
+	var property energiaInicial = 0
+	var property energiaActual = null
 	var property totalSaludables = 0
     var property totalInsalubres = 0
 
@@ -17,13 +17,13 @@ object pou {
 	var property position = game.at(2,3)
 
 //es necesario inicializar "edad" antes de llamar a este metodo
-	method IniciarJuego()
+	method iniciarJuego()
 	{
 		game.width(5)
 		game.height(7)
 		game.cellSize(100)
 		game.title("Jueguito Pou")
-		game.onTick(500, "actualizar", { self.ActualizarEstadoPou() })
+		game.onTick(500, "actualizar", { self.actualizarEstadoPou() })
 		game.start()
 		game.addVisual(self)
 		game.addVisual(pelota)
@@ -43,22 +43,22 @@ object pou {
 		keyboard.t().onPressDo { self.comer(carne)}	
 	}
 	
-	method ActualizarEstadoPou()
+	method actualizarEstadoPou()
 	{
 		estadisticas.SetearEstadisticas(self)
 	
 		//esta limpio y no se rie
-		if(!self.EstaSucio() && !reir)
+		if(!self.estaSucio() && !reir)
 		{
 			image = "pou limpio sin sonrreir.png"
 		}
 		//esta limpio y se rie
-		else if(!self.EstaSucio() && reir)
+		else if(!self.estaSucio() && reir)
 		{
 			image = "pou limpio sonrriendo.png"
 		}
 		//esta sucio y no se rie
-		else if(self.EstaSucio() && !reir)
+		else if(self.estaSucio() && !reir)
 		{
 			image = "pou sucio sin sonrreir.png"
 		}
@@ -69,7 +69,7 @@ object pou {
 		}
 	}
 
-method EstaSucio()
+method estaSucio()
     {
     	return comio && jugo
     }

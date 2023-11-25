@@ -364,5 +364,4 @@ object estadisticas
 	{	
 		text = "Energia Actual: " + pou.energiaActual() + "\nEstado de Salud: " + pou.estadoSalud()
 	}
-
 }
